@@ -11,11 +11,12 @@ jobs:
       - name: Checkout Code
         run: | 
           echo "hello world"
-      - name: Checkout Code
-        run: |
-          python3 ./.github/python-scripts/python-script0.py
       - run: |
           pwd
           ls
+
+      - name: Foobar
+        run: |
+          python3 ./.github/python-scripts/python-script0.py
 
 
