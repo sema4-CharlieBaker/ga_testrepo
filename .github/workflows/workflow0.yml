@@ -1,0 +1,18 @@
+name: s4-centrellis-datapipelines Tests v0.1
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Checkout Code
+        run: | 
+          echo "hello world"
+      - name: Checkout Code
+        run: |
+          python3 somepython.py
+
+
