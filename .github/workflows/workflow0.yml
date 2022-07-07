@@ -1,4 +1,4 @@
-name: s4-centrellis-datapipelines Tests v0.1
+name: some func test
 on:
   push:
 
@@ -13,6 +13,9 @@ jobs:
           echo "hello world"
       - name: Checkout Code
         run: |
-          python3 somepython.py
+          python3 ./.github/python-scripts/python-script0.py
+      - run: |
+          pwd
+          ls
 
 
