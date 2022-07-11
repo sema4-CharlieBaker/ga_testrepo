@@ -43,11 +43,6 @@ jobs:
           #aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Setup Github
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.8"
-          cache: "pip"
 
       - name: Install py requirements
         run: |
