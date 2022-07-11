@@ -42,7 +42,6 @@ projects_to_be_torn_down = [
 ]
 
 print(projects_to_be_torn_down)
-sys.exit()
 
 
 os.environ["AWS_REGION"] = "us-east-1"
@@ -104,7 +103,6 @@ for project in projects_to_be_torn_down:
 # docker compose --project-name PROJECT logs
 
 
-sys.exit()
 
 
 
