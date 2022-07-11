@@ -1,11 +1,3 @@
-
-# LEFT OFF - try two
-
-#cicd-datapipelines-dev--d70a65b DOWN
-#cicd-datapipelines-dev--d02da00 DOWN
-#cicd-datapipelines-dev--50fa64a DOWN
-#cicd-datapipelines-dev--911576e
-
 import boto3
 import subprocess as sp
 import sys
@@ -23,20 +15,25 @@ for arn in list_clusters_response["clusterArns"]:
     deployment_project_names.append(project_name)
 
 
+print(deployment_project_names)
+
 # Raises InvalidGitRepositoryError when not in a repo
 # can remove dep with own function
 # hardcoding the directory!
 thisdir = os.path.dirname(os.path.abspath(__file__))
-
-
-sys.exit()
-tags = sp.check_output(["cd", thisdir, "ls", "../../.git/refs/tags"]).decode("utf-8")
-tags = [tag for tag in tags.split("\n") if tag not in ("")]
+print(thisdir)
+os.chdir(thisdir)
+tags = sp.check_output(["ls", "../../.git/refs/tags"]).decode("utf-8")
+print(tags)
+tags = [tag for tag in tags.split() if tag not in ("")]
+print(tags)
 shas = [tag.split("-D-")[-1] for tag in tags]
+print(shas)
 
 projects_to_be_torn_down = [
     name
     for name in deployment_project_names
+    # if hash not in the existing tags
     if name.split("--")[-1] not in shas
     # may need to change this
     and 'cicd-datapipelines' in name
@@ -45,7 +42,7 @@ projects_to_be_torn_down = [
 ]
 
 print(projects_to_be_torn_down)
-#sys.exit()
+sys.exit()
 
 
 os.environ["AWS_REGION"] = "us-east-1"

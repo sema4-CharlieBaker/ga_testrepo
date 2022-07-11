@@ -5,7 +5,7 @@ name: Nightly cleanup
 concurrency: cicd-datapipelines-dev--nightly-cleanup
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
   # tears down an existing deployment by commit hash
@@ -24,8 +24,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-
-      - run: ls -lah && pwd
 
        #Docker Compose is needed for downstream docker compose
        #commands involving ECR
@@ -50,11 +48,12 @@ jobs:
           python-version: "3.8"
           cache: "pip"
 
-      - name: Tear down unneeded deployments
+      - name: Install py requirements
         run: |
           pip3 install boto3
+
+
+      - name: Tear down
+        run: |
+          pwd
           python3 ./.github/python-scripts/test-aws.py
-
-
-
-
