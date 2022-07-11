@@ -1,0 +1,60 @@
+name: Nightly cleanup
+
+# only one teardown is allowed at a time. If a teardown is
+# triggered while a deployment is already in progress, it is queud
+concurrency: cicd-datapipelines-dev--nightly-cleanup
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # tears down an existing deployment by commit hash
+  teardown_deployments:
+    # This checks to see if a *deployment tag* was deleted
+
+    name: 'TearDown Deployment'
+    runs-on: ubuntu-latest
+
+    # needed for OpenID auth with AWS
+    permissions:
+      id-token: write
+      contents: read
+
+    # Information about the event
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - run: ls -lah && pwd
+
+       #Docker Compose is needed for downstream docker compose
+       #commands involving ECR
+      - name: Docker Compose install
+        run: |
+          curl -L \
+          https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | \
+          sh
+
+      # Authenticate with AWS using OpenID
+      - name: Assume AWS CDICD Role with OpenID
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          #role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Setup Github
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Tear down unneeded deployments
+        run: |
+          pip3 install boto3
+          python3 ./.github/python-scripts/test-aws.py
+
+
+
+

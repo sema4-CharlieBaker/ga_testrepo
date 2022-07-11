@@ -1,22 +1,72 @@
-name: some func test
+name: Some test
 on:
   push:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      - name: foo
+        env:
+          event_type: ${{ github.event.compare }}
+        #if: ${{ github.event.before }}
+        run: |
+          echo $event_type
+
+          
       - name: Checkout Code
-        uses: actions/checkout@v3
-      - name: Checkout Code
-        run: | 
-          echo "hello world"
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+
+
+      - name: Ensure SHA pinned actions
+        uses: zgosalvez/github-actions-ensure-sha-pinned-actions@6ca5574367befbc9efdb2fa25978084159c5902d
+
+
+
+  second_job:
+    # This checks to see if a *deployment tag* was deleted
+    #if: ${{ (github.event.ref_type == 'tag') && (github.event_name == 'delete') && (startsWith(github.event.ref, 'dev-D-')) }}
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+      - name: foobar
+        run: |
+          echo hello from second job
       - run: |
           pwd
           ls
 
-      - name: Foobar
+      - name: Checkout Code
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+
+      - name: Run some python file
         run: |
           python3 ./.github/python-scripts/python-script0.py
+
+      - name: echo env var from python file
+        run: |
+          python3 
+          echo $action_state
+
+
+
+  third_job:
+    # This checks to see if a *deployment tag* was deleted
+    #if: ${{ (github.event.ref_type == 'tag') && (github.event_name == 'delete') && (startsWith(github.event.ref, 'dev-D-')) }}
+    runs-on: ubuntu-latest
+
+    needs: second_job
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+
+      #- name: foobar
+        #run: |
+          #python3 ./.github/python-scripts/test-aws.py
+
 
 
