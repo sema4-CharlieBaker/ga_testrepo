@@ -6,6 +6,7 @@ concurrency: cicd-datapipelines-dev--nightly-cleanup
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   # tears down an existing deployment by commit hash
