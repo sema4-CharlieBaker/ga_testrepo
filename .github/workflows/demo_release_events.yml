@@ -55,8 +55,9 @@ jobs:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
           # left off - figuring out taggin
-          bump_each_commit: true
-          format: "v${major}.${minor}.${patch}rc"
+          # plan
+          bump_each_commit: false
+          format: "v${major}.${minor}.${patch}rc${increment}"
 
 
       - name: foobar
@@ -70,4 +71,4 @@ jobs:
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           # can add to this for feature releases
-          tag: ${{ steps.semver.outputs.version_tag }}
+          tag: ${{ steps.semver.outputs.version }}
