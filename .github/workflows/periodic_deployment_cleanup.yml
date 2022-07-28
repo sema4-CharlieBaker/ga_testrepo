@@ -29,10 +29,7 @@ jobs:
        #Docker Compose is needed for downstream docker compose
        #commands involving ECR
       - name: Docker Compose install
-        run: |
-          curl -L \
-          https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | \
-          sh
+        run: bash ./.github/bash-scripts/install_docker_compose.sh
 
       # Authenticate with AWS using OpenID
       - name: Assume AWS CDICD Role with OpenID
@@ -43,13 +40,11 @@ jobs:
           #aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-
       - name: Install py requirements
         run: |
           pip3 install boto3
 
-
       - name: Tear down
         run: |
           pwd
-          python3 ./.github/python-scripts/test-aws.py
+          python3 ./.github/python-scripts/teardown_unneeded_ecs_deployments.py

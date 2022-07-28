@@ -1,0 +1,31 @@
+name: Nightly cleanup
+
+# only one teardown is allowed at a time. If a teardown is
+# triggered while a deployment is already in progress, it is queud
+concurrency: cicd-datapipelines-dev--nightly-cleanup
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  # tears down an existing deployment by commit hash
+  teardown_deployments:
+    # This checks to see if a *deployment tag* was deleted
+
+    name: 'TearDown Deployment'
+    runs-on: ubuntu-latest
+
+    # needed for OpenID auth with AWS
+    permissions:
+      id-token: write
+      contents: read
+
+    # Information about the event
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Get short SHA
+        id: slug
+        run: echo "::set-output name=sha7::$(echo ${GITHUB_SHA} | cut -c1-7)"

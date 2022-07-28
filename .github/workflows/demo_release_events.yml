@@ -1,0 +1,73 @@
+#left off - got the create release candidate trigger
+#now need the release trigger and the branch trigger
+#order of events: branch is created, tag is applied (uses the existing
+#tag, there will be one if it is from develop, )
+
+# on create release branch, apply tag with release branch name -
+# latest and w rc in its place (this is the initial tag for semver)
+name: demo release events.yml
+
+concurrency: foo
+
+env:
+  HS: dev
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  # tears down an existing deployment by commit hash
+  job0:
+    name: 'Job0'
+    runs-on: ubuntu-latest
+
+    # if: |
+    #   github.event.ref_type == 'tag' &&
+    #   contains(github.event.ref, 'rc')
+      
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        with:
+          fetch-depth: 0
+
+      - name: step0
+        env:
+          ref: ${{ github.event.ref }}
+          ref_type: ${{ github.event.ref_type }}
+        run: |
+          echo $ref
+          echo $ref_type
+
+      # produce semver for this commit this looks for the previous
+      # commit and increments patch for a commit, increments minor if
+      # (MINOR) is found in a commit message between the sha and the
+      # preceding commit, and increments major if (MAJOR) is found in
+      # a commit message between the sha and the preceding commit.
+      - name: Compute Semver
+        uses: paulhatch/semantic-version@3d2ea28b25c9a892b07cd24b5675300b701fcef5
+        id: semver
+        with:
+          tag_prefix: "v"
+          major_pattern: "(MAJOR)"
+          minor_pattern: "(MINOR)"
+          # left off - figuring out taggin
+          bump_each_commit: true
+          format: "v${major}.${minor}.${patch}rc"
+
+
+      - name: foobar
+        env:
+          version: ${{ steps.semver.outputs.version }}
+        run: echo $version
+          
+      - name: Add Semver Tag to Commit
+        if: ${{ !env.ACT }}
+        uses: tvdias/github-tagger@a570476cc87352c1655c606b29590df6014535e0
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          # can add to this for feature releases
+          tag: ${{ steps.semver.outputs.version_tag }}
