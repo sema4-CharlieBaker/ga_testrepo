@@ -60,10 +60,8 @@ jobs:
           tag_prefix: "v"
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
-          # left off - figuring out taggin
-          # plan
           bump_each_commit: false
-          format: "${{ steps.extract_branch.outputs.branch }}-rc${patch}"
+          format: "${major}.${minor}-rc${increment}"
 
 
       - name: foobar
