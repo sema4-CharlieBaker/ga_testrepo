@@ -42,6 +42,12 @@ jobs:
           echo $ref
           echo $ref_type
 
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
+        id: extract_branch
+
       # produce semver for this commit this looks for the previous
       # commit and increments patch for a commit, increments minor if
       # (MINOR) is found in a commit message between the sha and the
@@ -56,8 +62,8 @@ jobs:
           minor_pattern: "(MINOR)"
           # left off - figuring out taggin
           # plan
-          bump_each_commit: true
-          format: "v${major}.${minor}.${patch}rc${increment}"
+          bump_each_commit: false
+          format: "${{ steps.extract_branch.outputs.branch }}-rc${patch}"
 
 
       - name: foobar
