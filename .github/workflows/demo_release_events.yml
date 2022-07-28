@@ -61,6 +61,7 @@ jobs:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
           bump_each_commit: false
+
           format: "v${major}.${minor}-rc${increment}"
 
 
