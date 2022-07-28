@@ -57,6 +57,7 @@ jobs:
           # left off - figuring out taggin
           # plan
 
+
           bump_each_commit: false
           format: "v${major}.${minor}.${patch}rc${increment}"
 
