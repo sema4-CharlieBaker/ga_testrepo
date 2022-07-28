@@ -56,9 +56,7 @@ jobs:
           minor_pattern: "(MINOR)"
           # left off - figuring out taggin
           # plan
-
-
-          bump_each_commit: false
+          bump_each_commit: true
           format: "v${major}.${minor}.${patch}rc${increment}"
 
 
