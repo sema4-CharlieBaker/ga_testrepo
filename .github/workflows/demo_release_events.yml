@@ -61,7 +61,8 @@ jobs:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
           bump_each_commit: false
-          format: "${major}.${minor}-rc${increment}"
+          format: "v${major}.${minor}-rc${increment}"
+
 
 
       - name: foobar
